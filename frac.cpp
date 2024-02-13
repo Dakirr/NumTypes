@@ -1,5 +1,5 @@
 #include "frac.h"
-#include "mathlib.cpp"
+#include "mathlib.h"
 
 // arithmetics
 Frac& Frac::operator+= (const Frac& other) {
@@ -36,7 +36,7 @@ Frac operator/ (Frac first, const Frac& second) {
     return first /= second;
 }
 
-// int Arithmetics
+// int arithmetics
 
 Frac& Frac::operator+= (const FRAC_INT_TYPE& other) {
     num = other * denum;
@@ -74,3 +74,7 @@ Frac& Frac::operator+ () {
     denum /= x;
     return *this;
 }
+
+
+
+
