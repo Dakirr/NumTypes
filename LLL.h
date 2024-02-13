@@ -6,10 +6,17 @@ class LLL {
         char sign;
         char* folder;
     
-    LLL(long long x, int l = 2) {
+    LLL(char x, int l = 2, int sign = 1) {
         len = l;
         sign = x < 0 ? -1 : 1;
         folder = new char[l];
+    }
+
+    LLL(LLL& other, int l) {
+        len = l;
+        folder = new char[l];
+        memmove(folder, other.folder, other.len*sizeof(char));
+        sign = other.sign;
     }
 
     LLL& operator= (LLL& other) {
@@ -27,7 +34,6 @@ class LLL {
     }
 
     LLL& operator- ();
-    LLL& operator- ();
     LLL& operator+= (const LLL&);
     LLL& operator-= (const LLL&);
     LLL& operator*= (const LLL&);
@@ -41,5 +47,10 @@ LLL operator* (LLL first, LLL& second);
 LLL operator/ (LLL first, LLL& second);
 
 // comparison
-bool operator== (const LLL& first, const LLL& second);
-bool operator!= (const LLL& first, const LLL& second);
+bool operator== (LLL& first, LLL& second);
+bool operator!= (LLL& first, LLL& second);
+bool operator> (LLL& first,  LLL& second);
+bool operator< (LLL& first,  LLL& second);
+bool operator>= (LLL& first, LLL& second);
+bool operator<= (LLL& first, LLL& second);
+
