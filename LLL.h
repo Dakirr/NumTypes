@@ -1,40 +1,45 @@
 #include <cstring>
 
-class ULLL {
+class LLL {
     public:
         int len;
+        char sign;
         char* folder;
     
-    ULLL(long long x, int l = 2) {
+    LLL(long long x, int l = 2) {
         len = l;
+        sign = x < 0 ? -1 : 1;
         folder = new char[l];
     }
 
-    ULLL& operator= (ULLL& other) {
+    LLL& operator= (LLL& other) {
         char* tmp = folder;
         len = other.len;
+        sign = other.sign;
         folder = new char[len];
         memmove(folder, other.folder, len*sizeof(char));
         delete[] tmp;
         return *this;
     }
 
-    ~ULLL () {
+    ~LLL () {
         delete[] folder;
     }
 
-    ULLL& operator+= (const ULLL&);
-    ULLL& operator-= (const ULLL&);
-    ULLL& operator*= (const ULLL&);
-    ULLL& operator/= (const ULLL&);
+    LLL& operator- ();
+    LLL& operator- ();
+    LLL& operator+= (const LLL&);
+    LLL& operator-= (const LLL&);
+    LLL& operator*= (const LLL&);
+    LLL& operator/= (const LLL&);
 };
 
 // arithmetics
-ULLL operator+ (ULLL first, const ULLL& second);
-ULLL operator- (ULLL first, const ULLL& second);
-ULLL operator* (ULLL first, const ULLL& second);
-ULLL operator/ (ULLL first, const ULLL& second);
+LLL operator+ (LLL first, LLL& second);
+LLL operator- (LLL first, LLL& second);
+LLL operator* (LLL first, LLL& second);
+LLL operator/ (LLL first, LLL& second);
 
 // comparison
-bool operator== (const ULLL& first, const ULLL& second);
-bool operator!= (const ULLL& first, const ULLL& second);
+bool operator== (const LLL& first, const LLL& second);
+bool operator!= (const LLL& first, const LLL& second);
