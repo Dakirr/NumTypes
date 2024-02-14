@@ -1,4 +1,5 @@
 #include <cstring>
+#include <iostream>
 
 class LLL {
     public:
@@ -6,20 +7,30 @@ class LLL {
         char sign;
         char* folder;
     
-    LLL(char x, int l = 2, int sign = 1) {
+    LLL(long long x, int l) {
         len = l;
-        sign = x < 0 ? -1 : 1;
+        if (x >= 0) {
+            sign = 1;
+        } else {
+            sign = -1;
+        }
         folder = new char[l];
+        int i = 0;
+        while (x != 0) {
+            folder[i] = x % 10;
+            x /= 10;
+            i += 1;
+        }
     }
 
-    LLL(LLL& other, int l) {
+    LLL(LLL& other, int l, int s) {
         len = l;
         folder = new char[l];
         memmove(folder, other.folder, other.len*sizeof(char));
-        sign = other.sign;
+        sign = s;
     }
 
-    LLL& operator= (LLL& other) {
+    LLL operator= (LLL other) {
         char* tmp = folder;
         len = other.len;
         sign = other.sign;
@@ -29,11 +40,7 @@ class LLL {
         return *this;
     }
 
-    ~LLL () {
-        delete[] folder;
-    }
 
-    LLL& operator- ();
     LLL& operator+= (const LLL&);
     LLL& operator-= (const LLL&);
     LLL& operator*= (const LLL&);
@@ -41,10 +48,10 @@ class LLL {
 };
 
 // arithmetics
-LLL operator+ (LLL first, LLL& second);
-LLL operator- (LLL first, LLL& second);
-LLL operator* (LLL first, LLL& second);
-LLL operator/ (LLL first, LLL& second);
+LLL operator+ (LLL first, LLL second);
+LLL operator- (LLL first, LLL second);
+LLL operator* (LLL first, LLL second);
+LLL operator/ (LLL first, LLL second);
 
 // comparison
 bool operator== (LLL& first, LLL& second);
@@ -53,4 +60,19 @@ bool operator> (LLL& first,  LLL& second);
 bool operator< (LLL& first,  LLL& second);
 bool operator>= (LLL& first, LLL& second);
 bool operator<= (LLL& first, LLL& second);
+
+//
+std::ostream& operator<<(std::ostream& os, LLL f) {
+    if (f.sign == 1) {
+        os << "+";
+    } else {
+        os << "-";
+    }
+    for (int i = f.len - 1; i > -1; i--) {
+        os << int(f.folder[i]);
+    }
+    return os;
+}
+
+LLL operator- (LLL);
 
