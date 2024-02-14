@@ -7,44 +7,45 @@ class LLL {
         char sign;
         char* folder;
     
-    LLL(long long x, int l) {
-        len = l;
-        if (x >= 0) {
-            sign = 1;
-        } else {
-            sign = -1;
+        LLL(long long x, int l) {
+            len = l;
+            if (x >= 0) {
+                sign = 1;
+            } else {
+                sign = -1;
+            }
+            folder = new char[l];
+            int i = 0;
+            while (x != 0) {
+                folder[i] = x % 10;
+                x /= 10;
+                i += 1;
+            }
         }
-        folder = new char[l];
-        int i = 0;
-        while (x != 0) {
-            folder[i] = x % 10;
-            x /= 10;
-            i += 1;
+
+        LLL() {}
+
+        LLL(LLL& other, int l, int s) {
+            len = l;
+            folder = new char[l];
+            memmove(folder, other.folder, other.len*sizeof(char));
+            sign = s;
         }
-    }
 
-    LLL(LLL& other, int l, int s) {
-        len = l;
-        folder = new char[l];
-        memmove(folder, other.folder, other.len*sizeof(char));
-        sign = s;
-    }
-
-    LLL operator= (LLL other) {
-        char* tmp = folder;
-        len = other.len;
-        sign = other.sign;
-        folder = new char[len];
-        memmove(folder, other.folder, len*sizeof(char));
-        delete[] tmp;
-        return *this;
-    }
+        LLL operator= (LLL other) {
+            char* tmp = folder;
+            len = other.len;
+            sign = other.sign;
+            folder = new char[len];
+            memmove(folder, other.folder, len*sizeof(char));
+            return *this;
+        }
 
 
-    LLL& operator+= (const LLL&);
-    LLL& operator-= (const LLL&);
-    LLL& operator*= (const LLL&);
-    LLL& operator/= (const LLL&);
+        LLL& operator+= (const LLL&);
+        LLL& operator-= (const LLL&);
+        LLL& operator*= (const LLL&);
+        LLL& operator/= (const LLL&);
 };
 
 // arithmetics
@@ -52,14 +53,15 @@ LLL operator+ (LLL first, LLL second);
 LLL operator- (LLL first, LLL second);
 LLL operator* (LLL first, LLL second);
 LLL operator/ (LLL first, LLL second);
+LLL operator% (LLL first, LLL second);
 
 // comparison
-bool operator== (LLL& first, LLL& second);
-bool operator!= (LLL& first, LLL& second);
-bool operator> (LLL& first,  LLL& second);
-bool operator< (LLL& first,  LLL& second);
-bool operator>= (LLL& first, LLL& second);
-bool operator<= (LLL& first, LLL& second);
+bool operator== (LLL first, LLL second);
+bool operator!= (LLL first, LLL second);
+bool operator> (LLL first,  LLL second);
+bool operator< (LLL first,  LLL second);
+bool operator>= (LLL first, LLL second);
+bool operator<= (LLL first, LLL second);
 
 //
 std::ostream& operator<<(std::ostream& os, LLL f) {
@@ -75,4 +77,6 @@ std::ostream& operator<<(std::ostream& os, LLL f) {
 }
 
 LLL operator- (LLL);
+LLL operator* (LLL first, int second);
+LLL operator>> (LLL first, int second);
 

@@ -1,15 +1,18 @@
-int gcd(int a, int b) {
+#include "LLL.h"
+
+LLL gcd(LLL x, LLL y) {
+    LLL a = LLL(x, x.len, 1);
+    LLL b = LLL(y, y.len, 1);
+    
     while (true) {
-        if (a == 0) {
+        if (a == b) {
             return b;
         }
-        
-        if (b == 0) {
-            return a;
+        if (a > b) {
+            return gcd(a - b, b);
+        } else {
+            return gcd(b - a, a);
         }
-        
-        a %= b;
-        b %= a;
     }
 };
 
