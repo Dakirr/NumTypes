@@ -2,27 +2,28 @@
 
 // arithmetics
 
-LLL operator- (LLL f) {
-    return LLL(f, f.len, -1*f.sign);
+LLL& operator- (LLL& f) {
+    static LLL x = LLL(f, f.len, -1*f.sign);
+    return x;
 }
 
-LLL operator+ (LLL first, LLL second) {
+LLL operator+ (LLL& first, LLL& second) {
     if (first.sign == second.sign) {
         int l_max = max(first.len, second.len);
-        LLL ret;
-        LLL f = LLL(first, l_max, first.sign);
-        LLL s = LLL(second, l_max, second.sign);
-
-        if (f.folder[l_max - 1] + s.folder[l_max - 1] >= 9) {
-            ret = LLL(0, l_max + 1);
-        } else {
-            ret = LLL(0, l_max);
-        }
-
+        first.folder.resize(l_max);
+        second.folder.resize(l_max);
+        LLL ret = LLL(0, l_max);
         for (int i = 0; i < l_max; i++) {
-            int x = f.folder[i] + s.folder[i] + ret.folder[i];
+            int x = first.folder[i] + second.folder[i] + ret.folder[i];
             ret.folder[i] = x % 10;
-            ret.folder[i+1] = x / 10;
+            if (x/10 != 0) {
+                if (ret.folder.size() == i+1) {
+                    ret.folder.resize(i+2);
+                    ret.len += 1;
+                }
+                ret.folder[i+1] = x / 10;
+            }
+                
         }
         return ret;
     } else {
@@ -30,77 +31,61 @@ LLL operator+ (LLL first, LLL second) {
     }
 }
 
-LLL operator- (LLL first, LLL second) {
+LLL operator- (LLL& first, LLL& second) {
     if (first.sign == second.sign) {
         int l_max = max(first.len, second.len);
+        first.folder.resize(l_max);
+        second.folder.resize(l_max);
 
-        if (first.len != second.len) {
-            LLL f = LLL(first, l_max, first.sign);
-            LLL s = LLL(second, l_max, second.sign);
-            if (f > s) {
-                LLL ret = LLL(0, l_max);
-                ret.sign = f.sign;
-                for (int i = 0; i < l_max; i++) {
-                    int x = f.folder[i] + ret.folder[i] - s.folder[i];
-                    if (x >= 0) {
-                        ret.folder[i] = x;
-                    } else {
-                        ret.folder[i] = x + 10;
-                        ret.folder[i+1] = -1;
-                    }
-                }
-                return ret;
-            } else {
-                if (f < s) {
-                    return -(s - f);
+        if (first > second) {
+            LLL ret = LLL(0, l_max, first.sign);
+            for (int i = 0; i < l_max; i++) {
+                int x = first.folder[i] + ret.folder[i] - second.folder[i];
+                if (x >= 0) {
+                    ret.folder[i] = x;
                 } else {
-                    return LLL(0, l_max);
+                    ret.folder[i] = x + 10;
+                    if (ret.folder.size() == i) {
+                        ret.folder.resize(i+1);
+                        ret.len += 1;
+                    }
+                    ret.folder[i+1] = -1;
                 }
             }
+            return ret;
         } else {
-           if (first > second) {
-                LLL ret = LLL(0, l_max);
-                ret.sign = first.sign;
-                for (int i = 0; i < l_max; i++) {
-                    int x = first.folder[i] + ret.folder[i] - second.folder[i];
-                    if (x >= 0) {
-                        ret.folder[i] = x;
-                    } else {
-                        ret.folder[i] = x + 10;
-                        ret.folder[i+1] = -1;
-                    }
-                }
-                return ret;
+            if (first < second) {
+                LLL x = second - first;
+                return -x;
             } else {
-                if (first < second) {
-                    return -(second - first);
-                } else {
-                    return LLL(0, l_max);
-                }
-            } 
-        }
+                LLL x = LLL(0, l_max);
+                return x;
+            }
+        } 
     } else {
         return (first + (-second));
     }
 }
 
-LLL operator* (LLL first, int second) {
+
+LLL operator* (const LLL& first, int second) {
     LLL ret;
-    if (first.folder[first.len - 1] == 0) {
-        ret = LLL(0, first.len);
-    } else {
-        ret = LLL(0, first.len + 1);
-    }
-    //ret = LLL(0, first.len + 1);
+    ret = LLL(0, first.len);
     for (int i = 0; i < first.len; i++) {
             int x = first.folder[i]*second + ret.folder[i];
             ret.folder[i] = x % 10;
-            ret.folder[i + 1] = x / 10;
+            if ((x/10 != 0)) {
+                if (ret.len == i+1) {
+                    ret.folder.resize(i+2);
+                    ret.len += 1;
+                }
+                ret.folder[i+1] = x / 10;
+            }
     }
     return ret;
 }
 
-LLL operator>> (LLL first, int second) {
+LLL operator>> (const LLL& first, int second) {
     LLL ret = LLL(0, first.len + second);
     for (int i = 0; i < first.len; i++) {
         ret.folder[i + second] = first.folder[i];
@@ -108,10 +93,15 @@ LLL operator>> (LLL first, int second) {
     return ret;
 }
 
-LLL operator* (LLL first, LLL second) {
+LLL operator* (LLL& first, LLL& second) {
     LLL ret = LLL(0, 1);
     for (int i = 0; i < second.len; i++) {
-        ret = ret + ((first * second.folder[i]) >> i);
+        if (second.folder[i] != 0) {
+            LLL x = (first * second.folder[i]);
+            x = x >> i;
+            ret = ret + x;
+        }
+        //std::cout << first << "*" << int(second.folder[i]) << std::endl;
     }
     ret.sign = first.sign * second.sign;
     return ret;
@@ -122,9 +112,7 @@ LLL operator/ (LLL first, LLL second) {
     LLL s = LLL(second, second.len, 1);
     int k = 0;
     int m = 1;
-    
-
-    f = f - s;  
+    return LLL(0, 1);
     }
 
 // assignment operators
@@ -146,7 +134,7 @@ LLL& LLL::operator/= (const LLL& other) {
 }
 
 // comparison
-bool operator== (LLL first, LLL second) {
+bool operator== (const LLL& first, const LLL& second) {
     if (first.sign == second.sign) {
         int l_max = max(first.len, second.len);
         if (first.len != second.len) {
@@ -170,34 +158,21 @@ bool operator== (LLL first, LLL second) {
     }
 }
 
-bool operator!= (LLL first, LLL second) {
+bool operator!= (const LLL& first, const LLL& second) {
     return !(first == second);
 }
 
-bool operator> (LLL first, LLL second) {
+bool operator> (LLL& first, LLL& second) {
     if (first.sign == second.sign) {
         int l_max = max(first.len, second.len);
-        if (first.len != second.len) {
-            LLL f = LLL(first, l_max, first.sign);
-            LLL s = LLL(second, l_max, second.sign);
-            for (int i = l_max - 1; i > -1; i--) {
-                if (f.folder[i] > s.folder[i]) {
-                    return true;
-                } else {
-                    if (f.folder[i] < s.folder[i]) {
-                            return false;
-                    }
-                }
+        first.folder.resize(l_max);
+        second.folder.resize(l_max);
+        for (int i = l_max - 1; i > -1; i--) {
+            if (first.folder[i] > second.folder[i]) {
+                return true;
             }
-        } else {
-            for (int i = l_max - 1; i > -1; i--) {
-                if (first.folder[i] > second.folder[i]) {
-                    return true;
-                } else {
-                    if (first.folder[i] < second.folder[i]) {
-                            return false;
-                    }
-                }
+            if (first.folder[i] < second.folder[i]) {
+                    return false;
             }
         }
         return false;
@@ -210,14 +185,14 @@ bool operator> (LLL first, LLL second) {
     }
 }
 
-bool operator< (LLL first, LLL second) {
+bool operator< (LLL& first, LLL& second) {
     return second > first;
 }
 
-bool operator>= (LLL first, LLL second) {
+bool operator>= (LLL& first, LLL& second) {
     return !(first < second);
 }
 
-bool operator<= (LLL first, LLL second) {
+bool operator<= (LLL& first, LLL& second) {
     return !(first > second);
 }
