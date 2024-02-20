@@ -19,7 +19,7 @@ class LLL {
             } else {
                 sign = s;
             }
-            folder.resize(l);
+            folder.resize(len);
             int i = 0;
             while (x != 0) {
                 folder[i] = x % 10;
@@ -28,9 +28,9 @@ class LLL {
             }
         }
 
-        LLL() {}
+        LLL() = default;
 
-        ~LLL() {};
+        ~LLL()= default;
 
         LLL(const LLL& other, int l, int s) {
             len = l;
@@ -69,8 +69,8 @@ class LLL {
 LLL operator+ (LLL& first, LLL& second);
 LLL operator- (LLL& first, LLL& second);
 LLL operator* (LLL& first, LLL& second);
-LLL operator/ (LLL first, LLL second);
-LLL operator% (LLL first, LLL second);
+LLL operator/ (LLL& first, LLL& second);
+LLL operator% (LLL& first, LLL& second);
 
 // comparison
 bool operator== (const LLL& first, const LLL& second);
@@ -87,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, LLL f) {
     } else {
         os << "-";
     }
-    os << "{" << f.folder.size() << "-" << f.len << "}";
+    //os << "{" << f.folder.size() << "-" << f.len << "}";
     for (int i = f.folder.size() - 1; i > -1; i--) {
         os << int(f.folder[i]);
     }
