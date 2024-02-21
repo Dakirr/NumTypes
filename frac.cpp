@@ -1,6 +1,5 @@
 #include "frac.h"
 
-
 Frac operator+ (Frac& first, Frac& second) {
     LLL x = first.num * second.denum;
     LLL y = first.denum * second.num;

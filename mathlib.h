@@ -1,4 +1,5 @@
 #include "LLL.h"
+#pragma once
 
 LLL gcd(LLL x, LLL y) {
     if (x.sign != y.sign) {

@@ -1,4 +1,5 @@
 #include "LLL.cpp"
+#pragma once
 #define FRAC_INT_TYPE LLL
 class Frac {
     public:

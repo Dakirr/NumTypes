@@ -1,6 +1,34 @@
 #include <cassert>
 #include "frac.cpp"
 
+void comparison_test_LLL () {
+    LLL x = LLL(10, 2, 1);
+    LLL y = LLL(0, 3, 1);
+    LLL z = LLL(10, 2, -1);
+    assert(x == x);
+    assert(y != z);
+    assert(z < y);
+    assert(y <= x);
+    assert(x > z);
+    assert(y >= z);
+    std::cout << "LLL comparison OK" << std::endl;
+}
+
+void arithmetic_test_LLL () {
+    LLL x = LLL(10, 2, 1);
+    LLL y = LLL(0, 3, 1);
+    LLL z = LLL(10, 2, -1);
+    LLL x2 = LLL(100, 3, 1);
+    assert(x + z == y);
+    assert(y - z == x);
+    assert(x * y == y);
+    assert(y / z == y * z);
+    assert(x2 == x*x);
+    assert(x2 == z*z);
+    assert(-x == z);
+    std::cout << "LLL artihmetic OK" << std::endl;
+}
+
 void comparison_test () {
     Frac x = Frac(LLL(1, 1, -1), LLL(2, 1)); 
     Frac y = Frac(LLL(2, 1), LLL(2, 1));
@@ -18,12 +46,13 @@ void arithmetic_test () {
     Frac x = Frac(LLL(1, 1), LLL(2, 1)); 
     Frac y = Frac(LLL(2, 1, -1), LLL(2, 1));
     Frac z = Frac(LLL(3, 1), LLL(2, 1));
-    Frac sum = z + y;
-    Frac diff = x - z;
+    Frac sum = x + x;
+    sum = sum + x;
+    Frac diff = z - x;
     Frac mult = y * y;
     Frac div = z/z;
-    assert(sum == x);
-    assert(diff == y);
+    assert(sum == z);
+    assert(diff == div);
     assert(mult == div);
     std::cout << "Frac artihmetic OK" << std::endl;
 }
@@ -39,6 +68,8 @@ void input_test () {
 }
 
 int main() {
+    comparison_test_LLL();
+    arithmetic_test_LLL();
     comparison_test();
     arithmetic_test();
     input_test();
