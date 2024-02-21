@@ -34,28 +34,28 @@ class LLL {
 
         LLL(const LLL& other, int l, int s) {
             len = l;
-            folder = std::vector(other.folder);
+            folder = other.folder;
             folder.resize(len);
             sign = s;
         }
 
         LLL(const LLL& other) {
             len = other.len;
-            folder = std::vector(other.folder);
+            folder = other.folder;
             sign = other.sign;
         }
 
         LLL& operator= (LLL& other) {
             len = other.len;
             sign = other.sign;
-            folder = std::vector(other.folder);
+            folder = other.folder;
             return *this;
         }
         
         LLL& operator= (LLL other) {
             len = other.len;
             sign = other.sign;
-            folder = std::vector(other.folder);;
+            folder = other.folder;
             return *this;
         }
 
@@ -70,7 +70,6 @@ LLL operator+ (LLL& first, LLL& second);
 LLL operator- (LLL& first, LLL& second);
 LLL operator* (LLL& first, LLL& second);
 LLL operator/ (LLL& first, LLL& second);
-LLL operator% (LLL& first, LLL& second);
 
 // comparison
 bool operator== (const LLL& first, const LLL& second);

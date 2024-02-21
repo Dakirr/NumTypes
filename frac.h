@@ -36,21 +36,30 @@ class Frac {
             is_normal = 1;
         }
 
-        Frac (Frac& other) = default;
+        Frac (Frac& other) {
+            num = LLL(other.num);
+            denum = LLL(other.denum);
+            is_normal = other.is_normal;;
+        }
+
+
         // fraction specifics
         Frac& operator+ ();
+        
         Frac& operator= (Frac other) {
             num = LLL(other.num);
             denum = LLL(other.denum);
             is_normal = other.is_normal;;
             return *this;
         }
-        Frac& operator= (Frac& other) {
+
+        Frac operator= (Frac& other) {
             num = LLL(other.num);
             denum = LLL(other.denum);
             is_normal = other.is_normal;;
             return *this;
         }
+
         ~Frac() = default;
         Frac() = default;
 };

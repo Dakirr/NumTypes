@@ -3,7 +3,8 @@
 // arithmetics
 
 LLL& operator- (LLL& f) {
-    static LLL x = LLL(f, f.len, -1*f.sign);
+    static LLL x = LLL(f, f.len, f.sign);
+    x.sign = -f.sign;
     return x;
 }
 
@@ -124,24 +125,6 @@ LLL operator/ (LLL& first, LLL& second) {
     }
     div.sign = first.sign * second.sign;
     return div;
-}
-
-LLL operator% (LLL& first, LLL& second) {
-    LLL mod = LLL(first, first.len, 1);
-    LLL divider = LLL(second, second.len, 1);
-    LLL one = LLL(1, 1);
-
-    for (int k = first.len - second.len; k > -1; k--) {
-        LLL x = divider >> k;
-        if (x <= mod) {
-            LLL y = one >> k;
-            while (mod >= x) {
-                mod = mod - x;
-            }
-        }
-    }
-    mod.sign = first.sign * second.sign;
-    return mod;
 }
 
 // assignment operators
