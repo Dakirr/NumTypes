@@ -10,6 +10,32 @@ class Frac {
             denum = LLL(y);
             is_normal = normalized;
         }
+
+        Frac(std::string s) {
+            int len = s.length();
+
+            if (s[0] == '-') {
+                num.sign = -1;
+                s.replace(0, 1, "");
+            } else {
+                num.sign = 1;
+            }
+            num.folder = std::vector<char>(len);    
+            num.len = len;
+            int k = 0;
+            for (int i = len - 1; i > -1; i--) {
+                if (isdigit(s[i])) {
+                    num.folder[k] = s[i] - '0';
+                    k += 1;
+                } else {
+                    if (s[i] == '.') {
+                        denum = LLL(1, 1) >> k;
+                    }
+                };
+            }
+            is_normal = 1;
+        }
+
         Frac (Frac& other) = default;
         // fraction specifics
         Frac& operator+ ();
@@ -25,6 +51,8 @@ class Frac {
             is_normal = other.is_normal;;
             return *this;
         }
+        ~Frac() = default;
+        Frac() = default;
 };
 
 // arithmetics
@@ -58,18 +86,28 @@ std::ostream& operator<<(std::ostream& os, Frac f) {
     }
 
     if (f.is_normal) { 
-        if (f.num < f.denum) {
+        if (f.num < f.denum && -(f.num) < f.denum) {
             os << "0.";
         }
-        for (int i = f.num.len - 1; i > -1; i--) {
-            os << int(f.num.folder[i]);
-            if (i == f.denum.len - 1) {
-                os << '.';
+        if (f.num.folder[f.num.len - 1] != 0) {
+            for (int i = f.num.len - 1; i > -1; i--) {
+                os << int(f.num.folder[i]);
+                if (i == f.denum.len - 1) {
+                    os << '.';
+                }
+            }
+        } else {
+            for (int i = f.num.len - 2; i > -1; i--) {
+                os << int(f.num.folder[i]);
+                if (i == f.denum.len - 1) {
+                    os << '.';
+                }
             }
         }
+        
     } else {
         Frac x = f^(f.denum.len + 1);
-        if (x.num < x.denum) {
+        if (x.num < x.denum && -(x.num) < x.denum) {
                 os << "0.";
         }
         for (int i = x.num.len - 1; i > -1; i--) {
@@ -90,7 +128,7 @@ std::ostream& pi_n(Frac f, int acc, std::ostream& os = std::cout) {
     }
 
     Frac x = f^(f.denum.len + 1);
-    if (x.num < x.denum) {
+    if (x.num < x.denum && -(x.num) < x.denum) {
         os << "0.";
     }
     for (int i = x.num.len - 1; i > x.num.len - acc - 2; i--) {
@@ -101,3 +139,4 @@ std::ostream& pi_n(Frac f, int acc, std::ostream& os = std::cout) {
     }
     return os;
 }
+
