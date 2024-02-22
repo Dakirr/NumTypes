@@ -64,6 +64,8 @@ void input_test () {
     Frac y = Frac(LLL(2345, 4, -1), LLL(100, 3));
     Frac y0 = Frac("-23.45");
     assert(y == y0);
+    Frac x1 = "23.450"_f;
+    assert(x == x1);
     std::cout << "Frac input OK" << std::endl;
 }
 
