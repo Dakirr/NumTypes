@@ -65,6 +65,14 @@ class Frac {
         Frac() = default;
 };
 
+Frac operator""_f(const char* s, const size_t l) {
+    return Frac(s);
+};
+
+Frac operator""_f(const long double x) {
+    return Frac(std::to_string(x));
+};
+
 // arithmetics
 Frac operator+ (Frac& first, Frac& second);
 Frac operator- (Frac& first, Frac& second);
